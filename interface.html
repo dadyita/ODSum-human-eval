@@ -58,13 +58,13 @@ https://raw.githubusercontent.com/dadyita/QAdataset/main/embedding_finQA_viewer4
             <br>
             <div class="top">
                 <div class="module">
-                    <h2>Query</h2>
+                    <h1>Query</h1>
                     <div id="query"></div>
                 </div>
             </div>
             <div class="qa">
                 <div class="module">
-                    <h2>Article</h2>
+                    <h1>Article</h1>
                     <div id="article"></div>
                 </div>
 
@@ -74,22 +74,20 @@ https://raw.githubusercontent.com/dadyita/QAdataset/main/embedding_finQA_viewer4
                 <form>
                     <div class="column_input1">
                         <div class="inputBox">
-                            <textarea required autocomplete="off" id="input_doc_id" name="input_doc_id"></textarea>
-                            <label for="input_doc_id" title="Requirement 1" data-title="Requirement 1"></label>
+                            <textarea required autocomplete="off" id="Requirement_1" name="Requirement_1"></textarea>
+                            <label for="Requirement_1" title="Requirement 1" data-title="Requirement 1"></label>
                         </div>
                         <div class="inputBox">
-                            <textarea required autocomplete="off" id="pre_text_selected"
-                                name="text_selected"></textarea>
-                            <label for="pre_text_selected" title="Requirement 2" data-title="Requirement 2"></label>
+                            <textarea required autocomplete="off" id="Requirement_2" name="Requirement_2"></textarea>
+                            <label for="Requirement_2" title="Requirement 2" data-title="Requirement 2"></label>
                         </div>
                         <div class="inputBox">
-                            <textarea required autocomplete="off" id="table_selected" name="table_selected"></textarea>
-                            <label for="table_selected" title="Requirement 3" data-title="Requirement 3"></label>
+                            <textarea required autocomplete="off" id="Requirement_" name="Requirement_3"></textarea>
+                            <label for="Requirement_3" title="Requirement 3" data-title="Requirement 3"></label>
                         </div>
                         <div class="inputBox">
-                            <textarea required autocomplete="off" id="pre_text_selected"
-                                name="text_selected"></textarea>
-                            <label for="pre_text_selected" title="Requirement 4" data-title="Requirement 4"></label>
+                            <textarea required autocomplete="off" id="Requirement_4" name="Requirement_4"></textarea>
+                            <label for="Requirement_4" title="Requirement 4" data-title="Requirement 4"></label>
                         </div>
                     </div>
                     <div class="center">
@@ -420,69 +418,43 @@ https://raw.githubusercontent.com/dadyita/QAdataset/main/embedding_finQA_viewer4
                 return result;
             }
 
+
+
             //retrieve按钮的监听，先重置监听器然后获取公式和数据
             document.getElementById("retrieve").addEventListener("click", function (event) {
                 event.preventDefault();
                 let doc_id = $("#doc_id").val();
-                $.getJSON("https://raw.githubusercontent.com/dadyita/finQA_data/main/4-p0-0.json", function (data) {
-                    if (doc_id in data) {
-                        let doc = data[doc_id];
-                        let list_formula = doc.similar_formula;
-                        // data.select_html_table is a list
+                $.getJSON("https://raw.githubusercontent.com/dadyita/ODSum-human-eval/main/combine.json", function (data) {
 
-                        //获取formula html
-                        // category_formula = [{f:"",a:"",b:"",u:""},...]
-                        let category_formula = list_formula;
-                        let formula_html = "";
-                        formula_html += "<hr class=\"hr-double-arrow\">";
-                        category_formula.forEach(item => {
-                            ['formula', 'explanation'].forEach(headerText => {
-                                let formula = item['formula'];
-
-                                formula_html += "<p>";
-                                if (headerText == 'explanation')
-                                    formula_html += "<b>Explanation:  </b>";
-                                let text = item[headerText];
-                                let process_text = ""
-                                //text 2 latex
-                                if (!text.includes('{\\displaystyle')) {
-                                    formula_html += `${escapeHtml(text)}`;
-                                } else {
-                                    let pattern = /{\\displaystyle/;
-                                    process_text = text
-                                    while (process_text.match(pattern)) {
-                                        let match = process_text.match(pattern);
-                                        if (match) {
-                                            let start = match.index;
-                                            let content = balancedParentheses(process_text.slice(start));
-                                            let contentWithDollar = content.replace('{\\displaystyle', '').slice(0, -1);
-                                            process_text = process_text.slice(0, start) + `$${contentWithDollar}$` + process_text.slice(start + content.length);
-                                        }
-                                    }
-                                    formula_html += `${escapeHtml(process_text)}`;
-                                }
-                                if (headerText == 'explanation') {
-                                    // 加上checkbox
-                                    formula_html += `<input type="checkbox" onchange="updateFormulaSelected(this.checked,'${formula.replace(/'/g, "\\'")}')">`;
-                                }
-                                formula_html += "</p>"
-                            });
-
-                            formula_html += "<hr class=\"hr-mid-square\">";
-                        });
-
-                        //获取QA html
-
-                        // 返回值
-                        $("#html_string").html(doc.html_string.map((item, index) => `<input type="checkbox" onchange="updatePreTextSelected(this.checked, ${index})">${item}<br>`).join(""));
-                        $("#formula_list").html(formula_html);
-                        $("#qa_list").html(doc.qa.replaceAll("\n", "<br>"));
-                        if (window.mathjaxReady) {
-                            MathJax.typeset();
+                    function findDataByDocId(docIdToFind) {
+                        for (var i = 0; i < data.length; i++) {
+                            if (data[i].doc_id === docIdToFind) {
+                                return [data[i].Query, data[i].count, data[i].Article]; // 返回匹配的数据
+                            }
                         }
-                        init_listen();
+                        return null; // 如果没有找到匹配的数据，则返回 null 或其他适当的值
+                    }
 
-                        clearForm(doc_id, text);
+                    // 使用查找函数查找匹配的数据
+                    var data = findDataByDocId(doc_id);
+
+                    if (data !== null) {
+                        let query = data[0];
+                        let count = data[1];
+                        let article = data[2];
+
+                        var formattedArticle = "";
+
+                        // 循环列表中的每一个项目
+                        for (var i = 0; i < article.length; i++) {
+                            // 添加标题和内容
+                            formattedArticle += "<h3>Article " + (i + 1) + "</h3>" + article[i].replace(/\n/g, "<br>") + "<br>";
+                        }
+
+                        // 将格式化的文章内容添加到HTML中
+                        $("#article").html(formattedArticle);
+                        $("#query").html(query);
+                        clearForm(count);
                     } else {
                         alert("Invalid document ID!");
                     }
@@ -490,17 +462,12 @@ https://raw.githubusercontent.com/dadyita/QAdataset/main/embedding_finQA_viewer4
             });
 
 
-            function clearForm(doc_id, text) {
-                text
-                document.getElementById("input_doc_id").value = doc_id;
+            function clearForm(doc_id) {
+                document.getElementById("Requirement_1").value = doc_id;
                 //document.getElementById("question").value = text;
-                document.getElementById("question").value = "";
-                document.getElementById("answer").value = "";
-                document.getElementById("formula_selected").value = "";
-                document.getElementById("pre_text_selected").value = "";
-                document.getElementById("post_text_selected").value = "";
-                document.getElementById("table_selected").value = "";
-                document.getElementById("solution").value = "";
+                document.getElementById("Requirement_2").value = "";
+                document.getElementById("Requirement_3").value = "";
+                document.getElementById("Requirement_4").value = "";
             }
 
 

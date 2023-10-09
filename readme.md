@@ -13,5 +13,5 @@ Here are examples
 - so1 - the first story in the oracle setting
 - ml34 - the 34th meeting in the llm-embedding seeting
 
-to get the 2rd meeting in oracle setting, input mo2
+to get the 2rd meeting in oracle setting, input 'mo2'
 
