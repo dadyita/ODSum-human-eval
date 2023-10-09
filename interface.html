@@ -48,6 +48,32 @@ https://raw.githubusercontent.com/dadyita/QAdataset/main/embedding_finQA_viewer4
         <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
         <div class="container">
+            <p>
+                DocID is composed of three parts:
+            <ul>
+                <li>Article type
+                    <ul>
+                        <li>s - story</li>
+                        <li>m - meeting</li>
+                    </ul>
+                </li>
+                <li>Setting type
+                    <ul>
+                        <li>o - oracle</li>
+                        <li>l - llm-embedding</li>
+                    </ul>
+                </li>
+                <li>Samples index (1-50)</li>
+            </ul>
+            </p>
+
+            <p>Here are examples:</p>
+            <ul>
+                <li>so1 - the first story in the oracle setting</li>
+                <li>ml34 - the 34th meeting in the llm-embedding seeting</li>
+            </ul>
+
+            <p>To get the 2nd meeting in oracle setting, input 'mo2'</p>
             <div class="get_data">
                 <div class="inputBox">
                     <input type="text" required autocomplete="off" id="doc_id">
