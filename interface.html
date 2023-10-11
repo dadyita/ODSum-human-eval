@@ -120,7 +120,12 @@ https://raw.githubusercontent.com/dadyita/QAdataset/main/embedding_finQA_viewer4
                         </div>
                     </div>
                     <div class="center">
-
+                        <div class="inputBox">
+                            <textarea required autocomplete="off" id="return_doc_id" name="return_doc_id"></textarea>
+                            <label for="return_doc_id" title="doc ID" data-title="doc ID"></label>
+                        </div>
+                    </div>
+                    <div class="center">
                         <input type="submit" value="Submit">
 
                     </div>
@@ -460,7 +465,7 @@ https://raw.githubusercontent.com/dadyita/QAdataset/main/embedding_finQA_viewer4
                     function findDataByDocId(docIdToFind) {
                         for (var i = 0; i < data.length; i++) {
                             if (data[i].doc_id === docIdToFind) {
-                                return [data[i].Query, data[i].count, data[i].Article]; // 返回匹配的数据
+                                return [data[i].Query, data[i].count, data[i].Article,docIdToFind]; // 返回匹配的数据
                             }
                         }
                         return null; // 如果没有找到匹配的数据，则返回 null 或其他适当的值
@@ -473,7 +478,7 @@ https://raw.githubusercontent.com/dadyita/QAdataset/main/embedding_finQA_viewer4
                         let query = data[0];
                         let count = data[1];
                         let article = data[2];
-
+                        let doc_id = data[3];
                         var formattedArticle = "";
 
                         // 循环列表中的每一个项目
@@ -485,7 +490,7 @@ https://raw.githubusercontent.com/dadyita/QAdataset/main/embedding_finQA_viewer4
                         // 将格式化的文章内容添加到HTML中
                         $("#article").html(formattedArticle);
                         $("#query").html(query);
-                        clearForm(count);
+                        clearForm(doc_id,count);
                     } else {
                         alert("Invalid document ID!");
                     }
@@ -493,12 +498,13 @@ https://raw.githubusercontent.com/dadyita/QAdataset/main/embedding_finQA_viewer4
             });
 
 
-            function clearForm(doc_id) {
-                document.getElementById("Requirement_1").value = doc_id;
-                //document.getElementById("question").value = text;
+            function clearForm(doc_id,count) {
+                document.getElementById("Requirement_1").value = count;
+                document.getElementById("return_doc_id").value = doc_id;
                 document.getElementById("Requirement_2").value = "";
                 document.getElementById("Requirement_3").value = "";
                 document.getElementById("Requirement_4").value = "";
+                
             }
 
 
